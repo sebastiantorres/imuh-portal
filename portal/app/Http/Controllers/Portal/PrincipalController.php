@@ -13,7 +13,7 @@ class PrincipalController extends Controller
         $base  = config('services.portal.base_uri');
 
         $docsResponse = Http::withToken($token)
-            ->get("{$base}/docs");
+            ->get("{$base}/docs/pending");
         $pendingCount = 0;
         if ($docsResponse->successful()) {
             $documents = collect($docsResponse->json());
