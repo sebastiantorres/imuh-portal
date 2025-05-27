@@ -1,0 +1,18 @@
+services:
+  app:
+    # …
+    networks:
+      - portal_network
+      - imuh_network     # <— aquí
+
+  webserver:
+    # …
+    networks:
+      - portal_network
+      - imuh_network     # <— aquí
+
+networks:
+  portal_network:
+    driver: bridge
+  imuh_network:
+    external: true      # <— define red externa compartida
