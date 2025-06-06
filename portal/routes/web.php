@@ -3,6 +3,7 @@
 use App\Http\Controllers\Portal\AuthController;
 use App\Http\Controllers\Portal\PrincipalController;
 use App\Http\Controllers\Portal\DocumentController;
+use App\Http\Controllers\Portal\AccountController;
 use App\Http\Middleware\PortalAuthenticate;
 use Illuminate\Support\Facades\Route;
 
@@ -19,5 +20,8 @@ Route::middleware(PortalAuthenticate::class)->group(function () {
 
     Route::post('documents/{requirement}/upload', [DocumentController::class, 'upload'])
         ->name('portal.documents.upload');
+    Route::get('mi-cuenta', [AccountController::class, 'index'])
+    ->name('portal.account')
+    ->middleware('web');
 
 });
