@@ -33,11 +33,19 @@ class PrincipalController extends Controller
         $funding = $fundingResponse->successful()
             ? $fundingResponse->json()['funding'] ?? null
             : null;
+        $funding_group = $fundingResponse->successful()
+        ? $fundingResponse->json()['funding_group'] ?? null
+        : null;
+        $allocation = $fundingResponse->successful()
+        ? $fundingResponse->json()['allocation'][0] ?? null
+        : null;
         return view('portal.dashboard', [
             'pendingCount'       => $pendingCount,
             'currentInstallment' => $currentInstallment,
             'balance'            => $balance,
             'funding'            => $funding,
+            'funding_group' => $funding_group,
+            'allocation'    => $allocation,
         ]);
     }
 }

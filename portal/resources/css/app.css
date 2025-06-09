@@ -5,14 +5,35 @@
 
 @source "../views";
 
-@layer utilities {
+@layer base {
+  .page-bg {
+    background-color: #30B7EE;
+  }
 
+  body.page-bg {
+    position: relative;
+  }
+
+  /* Header: 64px de alto + ondas en esquinas via pseudo-elementos */
+  .site-header {
+    height: 4rem; /* 64px */
+    background-color: #30B7EE;
+    position: relative;
+    overflow: hidden;
+  }
+
+}
+
+@layer utilities {
   .bg-page {
     background-color: #F5F7FA !important;
   }
 
   .bg-primary {
     background-color: #2A41C5 !important;
+  }
+  .bg-secondary {
+    background-color: #30B7EE !important;
   }
   .text-primary {
     color: #2A41C5 !important;
