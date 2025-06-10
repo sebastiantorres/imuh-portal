@@ -16,7 +16,7 @@ Route::middleware(PortalAuthenticate::class)->group(function () {
         ->name('logout');
 
     Route::get('/', [PrincipalController::class, 'index'])->name('portal.dashboard');
-    Route::get('documents', [DocumentController::class, 'index'])->name('portal.documents');
+    Route::get('docs', [DocumentController::class, 'index'])->name('portal.documents');
 
     Route::post('documents/{requirement}/upload', [DocumentController::class, 'upload'])
         ->name('portal.documents.upload');

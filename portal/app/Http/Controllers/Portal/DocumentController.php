@@ -11,7 +11,6 @@ class DocumentController extends Controller
     {
         $token = session('portal_token');
         $base  = config('services.portal.base_uri');
-
         $response = Http::withToken($token)
             ->get("{$base}/docs/pending");
 
