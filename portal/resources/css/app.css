@@ -14,14 +14,13 @@
     position: relative;
   }
 
-  /* Header: 64px de alto + ondas en esquinas via pseudo-elementos */
   .site-header {
     height: 4rem; /* 64px */
-    background-color: #30B7EE;
     position: relative;
     overflow: hidden;
+    background-color: #30B7EE;
+    z-index: 1; /* elevar el header sobre el body */
   }
-
 }
 
 @layer utilities {
@@ -182,5 +181,34 @@
   }
   .text-secondary {
     color: #30B7EE !important;
+  }
+  
+  .waves-right,
+  .waves-left {
+    position: absolute;
+    background-repeat: no-repeat;
+    background-size: contain;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .waves-right {
+    top: 0;
+    right: 0;
+    width: 24rem;   /* ajusta según tu diseño */
+    height: 16rem;  /* ajusta según tu diseño */
+    z-index: 3;
+  }
+  .waves-left {
+    bottom: 0;
+    left: 0;
+    width: 24rem;   /* ajusta según tu diseño */
+    height: 16rem;  /* ajusta según tu diseño */
+  }
+
+  /* Asegura que los contenidos del header estén por encima */
+  .site-header > * {
+    position: relative;
+    z-index: 10;
   }
 }

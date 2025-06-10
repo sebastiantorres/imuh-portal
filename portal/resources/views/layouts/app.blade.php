@@ -6,6 +6,17 @@
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="page-bg flex flex-col min-h-screen">
+  {{-- Splash esquina superior derecha --}}
+  <div 
+    class="waves-right" 
+    style="background-image: url('{{ asset('images/waves-right.png') }}');">
+  </div>
+
+  {{-- Splash esquina inferior izquierda --}}
+  <div 
+    class="waves-left" 
+    style="background-image: url('{{ asset('images/waves-left.png') }}');">
+  </div>
 
   {{-- HEADER --}}
   <header class="site-header flex items-center px-6">
@@ -51,7 +62,6 @@
     @endif -->
 
   </header>
-
   <main class="container mx-auto py-6 px-6 bg-white">
     @yield('content')
   </main>
