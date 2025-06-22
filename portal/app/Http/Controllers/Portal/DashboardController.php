@@ -5,7 +5,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
-class PrincipalController extends Controller
+class DashboardController extends Controller
 {
     public function index(Request $request)
     {
@@ -16,7 +16,7 @@ class PrincipalController extends Controller
             ->get("{$base}/docs/pending");
         $pendingCount = 0;
         if ($docsResponse->successful()) {
-            $documents = collect($docsResponse->json());
+            $documents    = collect($docsResponse->json());
             $pendingCount = $documents->count();
         }
 
@@ -31,8 +31,8 @@ class PrincipalController extends Controller
         : null;
 
         $funding = $fundingResponse->successful()
-            ? $fundingResponse->json()['funding'] ?? null
-            : null;
+        ? $fundingResponse->json()['funding'] ?? null
+        : null;
         $funding_group = $fundingResponse->successful()
         ? $fundingResponse->json()['funding_group'] ?? null
         : null;
@@ -44,8 +44,26 @@ class PrincipalController extends Controller
             'currentInstallment' => $currentInstallment,
             'balance'            => $balance,
             'funding'            => $funding,
-            'funding_group' => $funding_group,
-            'allocation'    => $allocation,
+            'funding_group'      => $funding_group,
+            'allocation'         => $allocation,
+        ]);
+    }
+
+    public function showVoucherForm(Request $request)
+    {
+        $token = session('portal_token');
+        $base  = config('services.portal.base_uri');
+
+        $response = Http::withToken($token)->get("{$base}/funding");
+
+        if (! $response->successful()) {
+            return back()->withErrors(['error' => 'Unable to retrieve installment data.']);
+        }
+
+        $data = $response->json();
+
+        return view('portal.vouchers.form', [
+            'installment' => $data['installment'] ?? null,
         ]);
     }
 }

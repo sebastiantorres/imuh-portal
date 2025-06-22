@@ -84,6 +84,16 @@
         <p class="text-sm">Número de cuota:
           <strong>{{ $currentInstallment['number'] }} de {{ $funding['number_of_installments'] }}</strong>
         </p>
+        @if ($currentInstallment['status'] === 'pending')
+          <div class="mt-4">
+            <a href="{{ route('portal.installment.voucher.form') }}"
+              class="inline-block bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark transition">
+              Subir comprobante
+            </a>
+          </div>
+        @endif
+
+       
       @else
         <p class="text-gray-500">No hay información disponible.</p>
       @endif
@@ -122,3 +132,6 @@
   </div>
 </div>
 @endsection
+@if (request()->routeIs('portal.installment.voucher.form') && $currentInstallment)
+    @include('portal.vouchers.form', ['installment' => $currentInstallment])
+@endif
