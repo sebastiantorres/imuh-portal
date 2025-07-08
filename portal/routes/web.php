@@ -30,6 +30,14 @@ Route::middleware(PortalAuthenticate::class)->group(function () {
     // Route::get('vouchers/form', [VoucherController::class, 'form'])
     //     ->name('portal.voucher.form')
     //     ->middleware('web');
+
+    Route::get('vouchers/unassigned', function () {
+        return view('portal.vouchers.unassigned');
+    })->name('portal.voucher.unassigned.form')->middleware('web');
+
+    Route::post('vouchers/unassigned', [VoucherController::class, 'uploadUnassigned'])
+        ->name('portal.voucher.unassigned.upload')
+        ->middleware('web');
     Route::get('/installment/voucher', [DashboardController::class, 'showVoucherForm'])
         ->name('portal.installment.voucher.form')
         ->middleware('web');

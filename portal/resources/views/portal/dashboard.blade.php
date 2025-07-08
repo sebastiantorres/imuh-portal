@@ -85,10 +85,14 @@
           <strong>{{ $currentInstallment['number'] }} de {{ $funding['number_of_installments'] }}</strong>
         </p>
         @if ($currentInstallment['status'] === 'pending')
-          <div class="mt-4">
+          <div class="mt-4 space-y-2">
             <a href="{{ route('portal.installment.voucher.form') }}"
-              class="inline-block bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark transition">
-              Subir comprobante
+               class="block bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark text-center transition">
+               Comprobante de cuota
+            </a>
+            <a href="{{ route('portal.voucher.unassigned.form') }}"
+               class="block bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 text-center transition">
+               Comprobante sin cuota
             </a>
           </div>
         @endif

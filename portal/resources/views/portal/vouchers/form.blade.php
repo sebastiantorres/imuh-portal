@@ -2,11 +2,28 @@
 
 @section('content')
 @php
-  $canUpload = empty($installment['latest_voucher']) || $installment['latest_voucher']['status'] === 'rejected';
+  $canUpload = true;
 @endphp
 
 <div class="container mx-auto p-6">
   <h1 class="text-2xl font-bold mb-4 text-primary">Adjuntar comprobante de pago</h1>
+
+  @if (session('success'))
+    <div class="mb-4 p-4 border-l-4 border-green-500 bg-green-50 text-green-800 rounded">
+      <strong>¡Éxito!</strong> {{ session('success') }}
+    </div>
+  @endif
+
+  @if ($errors->any())
+    <div class="mb-4 p-4 border-l-4 border-red-500 bg-red-50 text-red-800 rounded">
+      <strong>Se encontraron errores:</strong>
+      <ul class="mt-2 list-disc list-inside text-sm">
+        @foreach ($errors->all() as $error)
+          <li>{{ $error }}</li>
+        @endforeach
+      </ul>
+    </div>
+  @endif
 
   <div class="bg-white p-6 rounded-lg shadow">
 
@@ -18,43 +35,45 @@
       <p><strong>Estado:</strong> {{ ucfirst($installment['status']) }}</p>
     </div>
 
-    {{-- 🧾 Comprobante cargado anteriormente --}}
-    @if (!empty($installment['latest_voucher']))
-      <div class="mb-6 bg-gray-100 border border-gray-300 p-4 rounded">
-        <p class="font-semibold text-gray-800 mb-1">Comprobante enviado:</p>
-        @php
-          $estado = match($installment['latest_voucher']['status']) {
-            'approved' => 'Aprobado',
-            'rejected' => 'Rechazado',
-            'pending' => 'Pendiente',
-            default => ucfirst($installment['latest_voucher']['status']),
-          };
-        @endphp
-        <p><strong>Estado:</strong> {{ $estado }}</p>
+    {{-- 🧾 Comprobantes cargados anteriormente --}}
+    @if (!empty($installment['vouchers']))
+      @foreach ($installment['vouchers'] as $voucher)
+        <div class="mb-6 bg-gray-100 border border-gray-300 p-4 rounded">
+          <p class="font-semibold text-gray-800 mb-1">Comprobante enviado:</p>
+          @php
+              $estado = match($voucher['status']) {
+                  'approved' => 'Aprobado',
+                  'rejected' => 'Rechazado',
+                  'pending' => 'Pendiente',
+                  default => ucfirst($voucher['status']),
+              };
+          @endphp
+          <p><strong>Estado:</strong> {{ $estado }}</p>
 
-        @if (!empty($installment['latest_voucher']['review_observation']))
-          <p class="mt-2 text-sm text-red-700">
-            <strong>Observación del revisor:</strong>
-            {{ $installment['latest_voucher']['review_observation'] }}
-          </p>
-        @endif
-
-        <p class="mt-2">
-          @if (str_starts_with($installment['latest_voucher']['file_mime'], 'application/pdf'))
-            <iframe src="data:{{ $installment['latest_voucher']['file_mime'] }};base64,{{ $installment['latest_voucher']['file_base64'] }}"
-                    class="w-full h-[500px] border rounded mb-4"></iframe>
+          @if (!empty($voucher['review_observation']))
+              <p class="mt-2 text-sm text-red-700">
+                  <strong>Observación del revisor:</strong>
+                  {{ $voucher['review_observation'] }}
+              </p>
           @endif
-          <a href="data:{{ $installment['latest_voucher']['file_mime'] }};base64,{{ $installment['latest_voucher']['file_base64'] }}"
-             download="{{ $installment['latest_voucher']['file_name'] }}"
-             class="text-blue-600 underline">
-            Descargar archivo adjunto ({{ $installment['latest_voucher']['file_name'] }})
-          </a>
-        </p>
-      </div>
+
+          <p class="mt-2">
+              @if (str_starts_with($voucher['file_mime'], 'application/pdf'))
+                  <iframe src="data:{{ $voucher['file_mime'] }};base64,{{ $voucher['file_base64'] }}"
+                          class="w-full h-[500px] border rounded mb-4"></iframe>
+              @endif
+              <a href="data:{{ $voucher['file_mime'] }};base64,{{ $voucher['file_base64'] }}"
+                  download="{{ $voucher['file_name'] }}"
+                  class="text-blue-600 underline">
+                  Descargar archivo adjunto ({{ $voucher['file_name'] }})
+              </a>
+          </p>
+        </div>
+      @endforeach
     @endif
 
     {{-- 📝 Formulario para subir nuevo comprobante --}}
-    @if ($canUpload)
+    @if ($installment['status'] !== 'paid')
       <form method="POST" action="{{ route('portal.voucher.upload') }}" enctype="multipart/form-data">
         @csrf
 
@@ -75,17 +94,8 @@
         </button>
       </form>
     @else
-      <div class="p-4 bg-yellow-50 border border-yellow-300 text-yellow-800 rounded text-sm mt-4">
-        @php
-          $estado = match($installment['latest_voucher']['status']) {
-            'approved' => 'Aprobado',
-            'rejected' => 'Rechazado',
-            'pending' => 'Pendiente',
-            default => ucfirst($installment['latest_voucher']['status']),
-          };
-        @endphp
-        Ya existe un comprobante en estado <strong>{{ $estado }}</strong>.
-        No es posible enviar otro hasta que sea rechazado.
+      <div class="mt-6 p-4 bg-blue-50 border border-blue-200 text-blue-800 rounded text-sm">
+        Esta cuota ya se encuentra <strong>pagada</strong>. No es posible cargar nuevos comprobantes.
       </div>
     @endif
 

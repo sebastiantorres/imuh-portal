@@ -39,6 +39,7 @@ class DashboardController extends Controller
         $allocation = $fundingResponse->successful()
         ? $fundingResponse->json()['allocation'][0] ?? null
         : null;
+
         return view('portal.dashboard', [
             'pendingCount'       => $pendingCount,
             'currentInstallment' => $currentInstallment,
