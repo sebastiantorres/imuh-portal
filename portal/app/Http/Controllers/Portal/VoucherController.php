@@ -65,11 +65,6 @@ class VoucherController extends Controller
             return back()->with('success', 'Tu comprobante fue enviado correctamente y será revisado.');
         }
 
-        \Log::error('Error al subir comprobante sin cuota', [
-            'status' => $response->status(),
-            'body'   => $response->body(),
-        ]);
-
         return back()->withErrors(['error' => 'No se pudo enviar el comprobante.']);
     }
 }
